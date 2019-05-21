@@ -115,6 +115,6 @@ public class SecondActivity extends AppCompatActivity {
 
     }
 
-    //Commiting Changes
+    //Commiting Change
 
 }
