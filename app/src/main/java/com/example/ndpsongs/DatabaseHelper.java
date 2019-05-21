@@ -85,34 +85,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Getting all the songs
-    public ArrayList<String> getAllSongsString() {
-        ArrayList<String> songs = new ArrayList<String>();
+    public ArrayList<Song> getAllSongsString() {
+        ArrayList<Song> songs = new ArrayList<Song>();
 
         String selectQuery = "SELECT " + SONG_ID + ","
-                + TITLE + " FROM " + SONG_TABLE;
+                + TITLE + ", "
+                + SINGERS + ", "
+                + YEAR + ", "
+                + STARS +  " FROM " + SONG_TABLE;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(0);
-                String content = cursor.getString(1);
-                songs.add("ID:" + id + ", " + content);
+                String title = cursor.getString(1);
+                String singers = cursor.getString(2);
+                int year = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+
+                songs.add(new Song(id,title,singers,year,stars));
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return songs;
     }
-    
+
     //filter
-    public ArrayList<Song> getAllSongs(String keyword) {
-        ArrayList<Song> notes = new ArrayList<Song>();
+    public ArrayList<Song> getAllSongs(int keyword) {
+        ArrayList<Song> alsong = new ArrayList<Song>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns= {SONG_ID, TITLE, SINGERS, YEAR, STARS};
-        String condition = TITLE + " Like ?";
-        String[] args = { "%" +  keyword + "%"};
+        String condition = STARS + " Like ?";
+        String[] args = { "" + keyword + ""};
         Cursor cursor = db.query(SONG_TABLE, columns, condition, args,
                 null, null, null, null);
 
@@ -125,11 +132,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int stars = cursor.getInt(4);
 
                 Song songs = new Song(id, title, singers, year, stars);
-                notes.add(songs);
+                alsong.add(songs);
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return notes;
+        return alsong;
     }
+
+
 }

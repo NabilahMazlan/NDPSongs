@@ -9,6 +9,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper dbh = new DatabaseHelper(MainActivity.this);
                 int selectedStar = rgStars.getCheckedRadioButtonId();
+                RadioButton rb = findViewById(selectedStar);
                 String title = etSongTitle.getText().toString();
                 String singers = etSingers.getText().toString();
                 int year = Integer.parseInt(etYear.getText().toString());
-                int stars = selectedStar;
-                long row_affected = dbh.insertSong(title, singers, year, stars);
+                long row_affected = dbh.insertSong(title, singers, year, Integer.parseInt(rb.getText().toString()));
                 dbh.close();
 
                 if (row_affected != -1){
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                startActivity(intent);
 
             }
         });
