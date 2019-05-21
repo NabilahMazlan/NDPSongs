@@ -40,13 +40,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
-        sqLiteDatabase.execSQL("DROP IF TABLE EXISTS " + SONG_TABLE);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SONG_TABLE);
 
         onCreate(sqLiteDatabase);
     }
 
     //insert Songs
-    public long insertNote(String title, String singers, int year, int stars) {
+    public long insertSong(String title, String singers, int year, int stars) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TITLE, title);
@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //update Songs
-    public int updateNote(Song data){
+    public int updateSong(Song data){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(TITLE, data.getTitle());
@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //delete Songs
-    public int deleteNote(int id){
+    public int deleteSong(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         String condition = SONG_ID + "= ?";
         String[] args = {String.valueOf(id)};
@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Getting all the songs
-    public ArrayList<String> getAllNotesString() {
+    public ArrayList<String> getAllSongsString() {
         ArrayList<String> songs = new ArrayList<String>();
 
         String selectQuery = "SELECT " + SONG_ID + ","
@@ -106,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     
     //filter
-    public ArrayList<Song> getAllNotes(String keyword) {
+    public ArrayList<Song> getAllSongs(String keyword) {
         ArrayList<Song> notes = new ArrayList<Song>();
 
         SQLiteDatabase db = this.getReadableDatabase();
