@@ -1,12 +1,18 @@
 package com.example.ndpsongs;
 
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import android.content.Intent;
 
 public class SecondActivity extends AppCompatActivity {
 
@@ -47,5 +53,68 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SecondActivity.this);
+                dialogBuilder.setTitle("Delete?");
+                dialogBuilder.setMessage("Are you sure you want to delete?");
+                dialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                            myDB.deleteSong(alSongs.get(position).getId());
+                            alSongs.remove(position);
+                            aaSongs.notifyDataSetChanged();
+                            Toast.makeText(SecondActivity.this, "Song Deleted", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+
+
+
+                return true;
+            }
+        });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(SecondActivity.this, ModifyActivity.class);
+                int id = alSongs.get(i).getId();
+                String title = alSongs.get(i).getTitle();
+                String singers = alSongs.get(i).getSingers();
+                int year = alSongs.get(i).getYear();
+                int stars = alSongs.get(i).getStars();
+
+                Song songs = new Song(id, title, singers, year, stars);
+                intent.putExtra("data", songs);
+                startActivityForResult(intent,9);
+            }
+        });
+
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+    }
+
+    //Commiting Changes
+
 }
